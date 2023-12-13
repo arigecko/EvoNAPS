@@ -45,7 +45,7 @@
 	
 	 <nav class="navbar navbar-expand-sm bg-secondary navbar-dark">
    
-   <a class="navbar-brand" href="indexx.php">
+   <a class="navbar-brand" href="index.php">
 	<img src="Logo_EvoNAPS_04.png" alt="Avatar Logo" style="width:350px;"> 
 	</a>
     <ul class="navbar-nav">
@@ -83,6 +83,15 @@
 	
 	<form action= "results_trees.php" method="post" class="was-validated" >
 	
+	<!-- new things -->
+	<style>
+			label.ex1 { 
+				font-size: 20px;
+				font-weight: bold;
+			}	
+		 	</style>
+	<!-- new things -->
+
 	<br>
 	<div class= "container-fluid">
 	<div class = "Radio_DNA_Prot">
@@ -97,14 +106,17 @@
 			<hr>
 			<h4> allignment source </h4>
 		   
-		   <input class ="cb" type="checkbox" name="selectAll"  id="all" onchange = "cbchange(this)" value="checked"checked>
+		   <input class ="cb" type="checkbox" name="selectAll"  id="all" onchange = "checkkall()" value="checked"checked>
 		   <label for = "all"><h4> all </h4></label> 
-		   <input class ="cb" type="checkbox" name="PANDIT"  id="PANDIT"  value="PANDIT" onclick = "cbchange(this)">
+		   <input class ="cb" type="checkbox" name="PANDIT"  id="PANDIT"  value="PANDIT" onclick = "checkkall()">
 		   <label for = "PANDIT"><h4> PANDIT</h4> </label>
-		   <input class ="cb" type="checkbox" name="Lanfear"  id="Lanfear"  value="Lanfear" onclick = "cbchange(this)">
+		   <input class ="cb" type="checkbox" name="Lanfear"  id="Lanfear"  value="Lanfear" onclick = "checkkall()">
 		   <label for = "Lanfear"><h4> Lanfear </h4></label> 
-		   <input class ="cb" type="checkbox" name="OrthoMaM"  id="OrthoMaM"  value="OrthoMaM" onclick = "cbchange(this)">
+		   <input class ="cb" type="checkbox" name="OrthoMaM"  id="OrthoMaM"  value="OrthoMaM" onclick = ""checkkall()">
 		   <label for = "OrthoMaM"> <h4>OrthoMaM</h4> </label>
+			<!-- new TreeBASE -->
+			<input class ="cb" type="checkbox" name="TreeBASE"  id="TreeBASE"  value="TreeBASE" onchange = "checkkall()">
+		  	<label for = "TreeBASE"> <h4>TreeBASE</h4> </label>
 
 		   <hr>
 		
@@ -232,6 +244,11 @@
 		  
 		  </section>
 		  
+		  <!-- new taxa -->
+
+		 <label for="number of hits" class="ex1"> Max number of datasets:</label>
+		 <input type="number" name="number_of_hits" id="Nr_hits" step="any">
+		  <br>
 		  
 		  <br>
 		  

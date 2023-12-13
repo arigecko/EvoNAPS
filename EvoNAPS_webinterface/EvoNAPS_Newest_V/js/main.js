@@ -107,31 +107,43 @@ function show4() {
 	
 function checkkall(){
 	
- cb1= document.getElementById('PANDIT');
- cb2= document.getElementById('Lanfear');
- cb3= document.getElementById('OrthoMaM');
- cb4= document.getElementById('all');
-
-if(cb4.checked == true){
-	document.getElementById('PANDIT').checked = false;
-	document.getElementById('Lanfear').checked = false;
-	document.getElementById('OrthoMaM').checked = false;
-	
+	cb1= document.getElementById('PANDIT');
+	cb2= document.getElementById('Lanfear');
+	cb3= document.getElementById('OrthoMaM');
+	 // TreeBASE added
+	//cb4= document.getElementById('all');
+	//if(cb4.checked == true){
+   
+	cb4= document.getElementById('TreeBASE');
+	cb5= document.getElementById('all');
+   
+   
+   if(cb5.checked == true){
+	   document.getElementById('PANDIT').checked = false;
+	   document.getElementById('Lanfear').checked = false;
+	   document.getElementById('OrthoMaM').checked = false;
+	   document.getElementById('TreeBASE').checked = false;
+	   
+   }
+   if(cb1.checked == true){
+	   cb5.checked = false;
+   
+   }
+   if(cb2.checked == true){
+	   cb5.checked = false;
+   
+   }
+   if(cb3.checked == true){
+	   cb5.checked = false;
+   
+   }
+   if(cb4.checked == true){
+	   cb5.checked = false;
+   
+   }
+   
 }
-if(cb1.checked == true){
-	cb4.checked = false;
 
-}
-if(cb2.checked == true){
-	cb4.checked = false;
-
-}
-if(cb3.checked == true){
-	cb4.checked = false;
-
-}
-
-}
 
 function cbChange(obj) {
     var cbs = document.getElementsByClassName("cb");

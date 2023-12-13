@@ -105,6 +105,28 @@ $_SESSION = array();
 		$Max_tree_dia = $_POST['max_tree_diameter'];
 		$_SESSION['max_tree_diameter']= $Max_tree_dia;
 
+		// <!-- new number of hits -->
+		
+		if(isset($_POST['number_of_hits'])){
+			if($_POST['number_of_hits'] >= 0 && $_POST['number_of_hits'] < 200){
+				$Nr_hits = ($_POST['number_of_hits']);
+				$_SESSION['number_of_hits']= $Nr_hits;
+				//$lim_val = "value is set";
+				//$_SESSION['value_set']= $lim_val;
+			}else{
+				$Nr_hits = 200;
+				$_SESSION['number_of_hits']= $Nr_hits;
+				//$lim_val = "value is not set";
+				//$_SESSION['value_set']= $lim_val;
+			}
+			if($_POST['number_of_hits'] >= 0 && $_POST['number_of_hits'] < 20){
+				$Nr_hits_preview = ($_POST['number_of_hits']);
+				$_SESSION['number_of_hits_preview']= $Nr_hits_preview;
+			}else{
+				$Nr_hits_preview = 20;
+				$_SESSION['number of hits preview']= $Nr_hits_preview;
+			}
+		}
 
 		//Source Variables
 		$Source = [];
@@ -123,6 +145,12 @@ $_SESSION = array();
 		$Lanf =$_POST['Lanfear'];
 		$_SESSION['Lanfear']= $Lanf;
 		}
+		// new TreeBASE
+		if(isset($_POST['TreeBASE'])){
+			$TreeB =$_POST['TreeBASE'];
+			$_SESSION['TreeBASE']= $TreeB;
+			}
+		//
 		if(isset($_POST['selectAll'])){
 		$ALL = $_POST['selectAll'];
 		$_SESSION['selectAll']= $ALL;

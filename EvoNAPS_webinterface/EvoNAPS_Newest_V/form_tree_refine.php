@@ -37,7 +37,7 @@
 	</head> 
 	<nav class="navbar navbar-expand-sm bg-secondary navbar-dark">
    
-   <a class="navbar-brand" href="indexx.php">
+   <a class="navbar-brand" href="index.php">
 	<img src="Logo_EvoNAPS_04.png" alt="Avatar Logo" style="width:350px;"> 
 	</a>
     <ul class="navbar-nav">
@@ -91,14 +91,18 @@
 			
 			<hr>
 			<h4> allignment source </h4><br>
-		   <label for = "all"> <h4> all </h4> </label> 
-		  <input type="checkbox" name="selectAll"  id="all" onclick = "selectall(this)" value="checked" <?php if(isset($_SESSION['selectAll'])){ echo "checked"; }?>>
-		  <label for = "PANDIT"> <h4> PANDIT </h4> </label>
-		  <input type="checkbox" name="PANDIT"  id="PANDIT"  value="PANDIT" <?php if(isset($_SESSION['PANDIT'])){ echo "checked"; }?>>
-		   <label for = "Lanfear"> <h4> Lanfear </h4> </label> 
-		  <input type="checkbox" name="Lanfear"  id="Lanfear"  value="Lanfear" <?php if(isset($_SESSION['Lanfear'])){ echo "checked"; }?>>
-		 <label for = "OrthoMaM"> <h4> OrthoMaM </h4> </label>
-		  <input type="checkbox" name="OrthoMaM"  id="OrthoMaM"  value="OrthoMaM" <?php if(isset($_SESSION['OrthoMaM'])){ echo "checked"; }?>>
+			<label for = "all"> <h4> all </h4> </label> 
+			<input type="checkbox" name="selectAll"  id="all" onclick = "selectall(this)" value="checked" <?php if(isset($_SESSION['selectAll'])){ echo "checked"; }?>>
+			<label for = "PANDIT"> <h4> PANDIT </h4> </label>
+			<input type="checkbox" name="PANDIT"  id="PANDIT"  value="PANDIT" <?php if(isset($_SESSION['PANDIT'])){ echo "checked"; }?>>
+			<label for = "Lanfear"> <h4> Lanfear </h4> </label> 
+			<input type="checkbox" name="Lanfear"  id="Lanfear"  value="Lanfear" <?php if(isset($_SESSION['Lanfear'])){ echo "checked"; }?>>
+			<label for = "OrthoMaM"> <h4> OrthoMaM </h4> </label>
+			<input type="checkbox" name="OrthoMaM"  id="OrthoMaM"  value="OrthoMaM" <?php if(isset($_SESSION['OrthoMaM'])){ echo "checked"; }?>>
+		 
+		  <!-- new TreeBASE -->
+			<label for = "TreeBASE"> <h4> TreeBASE </h4> </label>
+			<input type="checkbox" name="TreeBASE"  id="TreeBASE"  value="TreeBASE" <?php if(isset($_SESSION['TreeBASE'])){ echo "checked"; }?>>
 		 
 			<hr>
 		  
@@ -216,6 +220,19 @@
 		  <label for="Max_Nr_sitesNr_Seq"><h4>max</h4></label> 
 		  <input type="number" name="max_number_of_sites" id="Max_Nr_sites" step = "any" <?php if(!empty($_SESSION['max_number_of_sites'])){ echo "value =".$_SESSION['max_number_of_sites'];} ?>> <br>
 		  
+		  <br>
+
+		  <!-- new number of hits -->
+		 <style>
+			label.ex1 { 
+				font-size: 20px;
+				font-weight: bold;
+			}
+		  </style>
+		  <label for="number of hits" class="ex1"> Max number of datasets:</label>
+		  <input type="number" name="number_of_hits" id="Nr_hits" step="any" <?php if(!empty($_SESSION['number_of_hits'])){ echo "value =".$_SESSION['number_of_hits'];} ?>> <br>
+		  
+
 		  </div>
 		  </section>
 		 

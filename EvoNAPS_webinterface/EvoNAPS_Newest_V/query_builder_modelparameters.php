@@ -108,8 +108,9 @@
 
 /////////////////////String Building Source ///////////////////////
 
+// new TreeBASE
 $stringsource = "";
-$stringall = "'PANDIT','OrthoMaM','Lanfear'";
+$stringall = "'PANDIT','OrthoMaM','Lanfear', 'TreeBASE'";
 
 if(!empty($Ortho)){
 			
@@ -128,6 +129,12 @@ if(!empty($Lanf)){
 			
 		}
 
+// new TreeBASE
+if(!empty($TreeB)){
+			
+	$Source[] = $TreeB;
+	
+}
 //////////////Loop for String Source Building////////////////////////
 
 
@@ -1161,10 +1168,11 @@ $first = false;
 				$f_d_query_1 .= " AND ".implode(" AND ", $f_d_conditions);	
 				}		
 
-				$f_d_query_1 .= " LIMIT 20";
-				
-				//echo $f_d_query_1;
-				//echo "<br>";
+				// <!-- new number of hits -->		
+				$f_d_query .= " LIMIT {$Nr_hits}";
+				$f_d_query_1 .= " LIMIT {$Nr_hits_preview}";
+				//echo ($lim_val);
+				echo "<br>";
 					//echo $f_d_query;
 				
 				 

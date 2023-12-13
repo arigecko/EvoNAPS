@@ -59,7 +59,7 @@
   
   <nav class="navbar navbar-expand-sm bg-secondary navbar-dark">
    
-   <a class="navbar-brand" href="indexx.php">
+   <a class="navbar-brand" href="index.php">
 	<img src="Logo_EvoNAPS_04.png" alt="Avatar Logo" style="width:350px;"> 
 	</a>
     <ul class="navbar-nav">

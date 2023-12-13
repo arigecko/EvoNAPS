@@ -99,7 +99,7 @@
   
   <nav class="navbar navbar-expand-sm bg-secondary navbar-dark">
    
-   <a class="navbar-brand" href="indexx.php">
+   <a class="navbar-brand" href="index.php">
 	<img src="Logo_EvoNAPS_04.png" alt="Avatar Logo" style="width:350px;"> 
 	</a>
     <ul class="navbar-nav">
@@ -113,13 +113,13 @@
 	<ul class ="navbar-nav ms-auto">
 	
 	 <li class="nav-item">
-	 <a class="nav-link active" href="indexx.php"><h4>Home</h4></a>
+	 <a class="nav-link active" href="index.php"><h4>Home</h4></a>
 	 </li>
 	 <li class="nav-item">
-	 <a class="nav-link active" href="indexx.php"><h4>Documentation</h4></a>
+	 <a class="nav-link active" href="index.php"><h4>Documentation</h4></a>
 	 </li>
 	 <li class="nav-item">
-	 <a class="nav-link active" href="indexx.php"><h4>FAQ</h4></a>
+	 <a class="nav-link active" href="index.php"><h4>FAQ</h4></a>
 	 </li>
 	
 	</ul>
@@ -295,7 +295,9 @@
 		  <label for = "Lanfear"><h4> Lanfear </h4></label> 
 		  <input class ="cb" type="checkbox" name="OrthoMaM"  id="OrthoMaM"  value="OrthoMaM" onchange = "checkkall()">
 		  <label for = "OrthoMaM"> <h4>OrthoMaM</h4> </label>
-		 
+		  <!-- new TreeBASE -->
+		  <input class ="cb" type="checkbox" name="TreeBASE"  id="TreeBASE"  value="TreeBASE" onchange = "checkkall()">
+		  <label for = "TreeBASE"> <h4>TreeBASE</h4> </label>
 		
 		 <hr>
 			
@@ -450,7 +452,15 @@
 		  </div>
 		  </section>
 		  
-		  
+		  <!-- new number of hits -->
+		<style>
+			label.ex1 { 
+				font-size: 20px;
+				font-weight: bold;
+			}
+		</style>
+		<label for="number of hits" class="ex1"> Max number of datasets:</label>
+		<input type="number" name="number_of_hits" id="Nr_hits" step="any"> <br>
 		  
 		  
 		

@@ -15,8 +15,10 @@
 		
 		/////////////////////String Building Source ///////////////////////
 
+// new TreeBASE
 $stringsource = "";
-$stringall = "'PANDIT','OrthoMaM','Lanfear'";
+$stringall = "'PANDIT','OrthoMaM','Lanfear', 'TreeBASE'";
+
 
 if(!empty($Ortho)){
 			
@@ -34,6 +36,13 @@ if(!empty($Lanf)){
 			$Source[] = $Lanf;
 			
 		}
+
+// new TreeBASE
+if(!empty($TreeB)){
+			
+	$Source[] = $TreeB;
+	
+}
 
 //////////////Loop for String Source Building////////////////////////
 
@@ -509,16 +518,24 @@ $first = false;
 			
 			
 			//Fuze conditions in 1 string
-			if(empty($f_d_parameters)){
+			//if(empty($f_d_parameters)){
 				
-				$f_d_query_1 .= "LIMIT 20";
+				//$f_d_query_1 .= "LIMIT 20";
 				
-			}else {
-				$f_d_query .= " AND ".implode(" AND ", $f_d_conditions);
-				$f_d_query_1 .= " AND ".implode(" AND ", $f_d_conditions)." LIMIT 20";
+			//}else {
+				//$f_d_query .= " AND ".implode(" AND ", $f_d_conditions);
+				//$f_d_query_1 .= " AND ".implode(" AND ", $f_d_conditions)." LIMIT 20";
 				
-			}
+			//}
 
+			// <!-- new number of hits -->	
+			if($f_d_parameters){
+					
+				$f_d_query .= " AND ".implode(" AND ", $f_d_conditions);
+				$f_d_query_1 .= " AND ".implode(" AND ", $f_d_conditions);	
+			}
+			$f_d_query .= " LIMIT {$Nr_hits}";
+			$f_d_query_1 .= " LIMIT {$Nr_hits_preview}";
 
 			echo $f_d_query;
 			 
