@@ -9,7 +9,7 @@
 		*/ 
 		
 		$hostname = 'localhost';
-		$dbname= 'evonaps_try_2';
+		$dbname= 'evonaps_try1';
 		$username='root';
 		$password='';
 		$dsn= "mysql:host=$hostname;dbname=$dbname";

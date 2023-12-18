@@ -13,7 +13,7 @@ function show(x) {
 		const Matrices_P  = document.getElementById('Matrices_Prot');
 		Matrices_P.style.display = 'none';
 		
-		*/
+		*/ 
 		
 		//works////////////
 		
@@ -143,7 +143,94 @@ function checkkall(){
    }
    
 }
+// added for alignment form
+function checkkallAli(obj){
+rank = ['PANDIT_rank', 'Lanfear_rank', 'OrthoMaM_rank', 'TreeBASE_rank', 'all_rank']
+clade = ['PANDIT_clade', 'Lanfear_clade', 'OrthoMaM_clade', 'TreeBASE_clade', 'all_clade']
+taxa = ['PANDIT_taxa', 'Lanfear_taxa', 'OrthoMaM_taxa', 'TreeBASE', 'all_taxa']
+idList = []
+if (obj == "rank"){
+	idList = rank
+} else if (obj == "clade"){
+	idList = clade
+} else if (obj == "taxa"){
+	idList = taxa
+}
 
+	cb1= document.getElementById(idList[0]);
+	cb2= document.getElementById(idList[1]);
+	cb3= document.getElementById(idList[2]);
+   
+	cb4= document.getElementById(idList[3]);
+	cb5= document.getElementById(idList[4]);
+   
+   
+   if(cb5.checked == true){
+	   document.getElementById(idList[0]).checked = false;
+	   document.getElementById(idList[1]).checked = false;
+	   document.getElementById(idList[2]).checked = false;
+	   document.getElementById(idList[3]).checked = false;
+	   
+   }
+   if(cb1.checked == true){
+	   cb5.checked = false;
+   
+   }
+   if(cb2.checked == true){
+	   cb5.checked = false;
+   
+   }
+   if(cb3.checked == true){
+	   cb5.checked = false;
+   
+   }
+   if(cb4.checked == true){
+	   cb5.checked = false;
+   
+   }
+   
+}
+
+/*
+function maxHitRank(value, id, ctrlFieldID){
+	max = 200
+	hitsNum = document.getElementById(id)
+	if(document.getElementById(ctrlFieldID).value){
+		if (value > max){
+			hitsNum.value = max
+		}
+	} else {
+		hitsNum.value = 1
+	}
+	
+} */
+
+function max_hit(value, id){
+	max = 200
+	if (value > max){
+		document.getElementById(id).value = max
+	}
+}
+function updateFormVal(){
+	max = 200
+	if(document.getElementById('Nr_hits_rank').value){
+		value = document.getElementById('Nr_hits_rank')
+		if (value > max){
+			value.value = max
+		}
+	} else if(document.getElementById('Nr_hits_clade').value){
+		value = document.getElementById('Nr_hits_clade')
+		if (value > max){
+			value.value = max
+		}
+	} else if(document.getElementById('Nr_hits_taxa').value){
+		value = document.getElementById('Nr_hits_taxa')
+		if (value > max){
+			value.value = max
+		}
+	}
+	
+}
 
 function cbChange(obj) {
     var cbs = document.getElementsByClassName("cb");
@@ -160,9 +247,27 @@ function loading() {
   
 }
 
+function AliSearchOptions(obj) {
+    const field = ["id_search", "ranks_search", "clade_search", "sp_taxa_search"]
+    clickedField = document.getElementById(obj)
+    displayValue = "";
+	displayRest = "none"
+    if (clickedField.style.display == ""){
+        displayValue = "none";
+		//displayRest = ""
+    }
+    clickedField.style.display = displayValue;
+	for (let i = 0; i < field.length; i++){
+		if (field[i] != obj){
+			fieldID = field[i]
+			document.getElementById(fieldID).style.display = displayRest;
+		}
+	}
+}
+
+
 	
-	
-	
+
 
 /*
 function show3() {

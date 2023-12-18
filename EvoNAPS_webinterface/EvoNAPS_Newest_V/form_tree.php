@@ -108,11 +108,11 @@
 		   
 		   <input class ="cb" type="checkbox" name="selectAll"  id="all" onchange = "checkkall()" value="checked"checked>
 		   <label for = "all"><h4> all </h4></label> 
-		   <input class ="cb" type="checkbox" name="PANDIT"  id="PANDIT"  value="PANDIT" onclick = "checkkall()">
+		   <input class ="cb" type="checkbox" name="PANDIT"  id="PANDIT"  value="PANDIT" onchange = "checkkall()">
 		   <label for = "PANDIT"><h4> PANDIT</h4> </label>
-		   <input class ="cb" type="checkbox" name="Lanfear"  id="Lanfear"  value="Lanfear" onclick = "checkkall()">
+		   <input class ="cb" type="checkbox" name="Lanfear"  id="Lanfear"  value="Lanfear" onchange = "checkkall()">
 		   <label for = "Lanfear"><h4> Lanfear </h4></label> 
-		   <input class ="cb" type="checkbox" name="OrthoMaM"  id="OrthoMaM"  value="OrthoMaM" onclick = ""checkkall()">
+		   <input class ="cb" type="checkbox" name="OrthoMaM"  id="OrthoMaM"  value="OrthoMaM" onchange = "checkkall()">
 		   <label for = "OrthoMaM"> <h4>OrthoMaM</h4> </label>
 			<!-- new TreeBASE -->
 			<input class ="cb" type="checkbox" name="TreeBASE"  id="TreeBASE"  value="TreeBASE" onchange = "checkkall()">
@@ -207,8 +207,10 @@
 		  </div>
 		  
 		  </section>
+		
 		  <br>
-		   <section class="Alignment_Specs_Check">	
+		
+		  <section class="Alignment_Specs_Check">	
 
 		<div class = "Alignment_Specs_Check" >
 		 <input type="checkbox" name="alignment_features" id="Alignment_Specs_Check" onclick = "show3()" value="TRUE">

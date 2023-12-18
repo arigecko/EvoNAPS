@@ -24,7 +24,7 @@
 		// Set Variables for the Filter 
 		/*
 		session_start();
-		
+		 
 		$DNA_Prot = $_POST['DNA_Prot'];
 		$OPT_uOPT = $_POST['OPT_uOPT'];
 		
@@ -57,6 +57,7 @@
 		$f_d_conditions = [];
 		$f_d_parameters = [];
 		$usedna = false;
+		
 		
 		
 		if($DNA_Prot == "dna"){
@@ -138,8 +139,9 @@
 			//Fuze conditions in 1 string
 			if($f_d_conditions)
 				$f_d_query .= " WHERE ".implode(" AND ", $f_d_conditions);
-				$f_d_query_1 .= " WHERE ".implode(" AND ", $f_d_conditions)." LIMIT 20";
-			
+				$f_d_query_1 .= " WHERE ".implode(" AND ", $f_d_conditions);
+				$f_d_query .= " LIMIT {$Nr_hits}";
+				$f_d_query_1 .= " LIMIT {$Nr_hits_preview}";
 			
 			//Echo string for the query
 		//	echo ($f_d_query_1);
