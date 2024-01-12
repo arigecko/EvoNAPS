@@ -20,34 +20,10 @@
 	</script>
 	
 	
-	
 
 	 <script src="js/main.js"></script> 
 	 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-
-<style>
-	 
-	 .center {
-		 margin-left: 180px;
-    margin-right: 180px;
-		margin-top: 30px;
-		margin-bottom: 80px;
-	}
-	
-	.nav-item{
-		padding-right:40px;
-		
-		
-	}
-	
-
-	.navbar-brand{
-		
-		padding-left: 50px;
-		
-	}
-	 </style>
-
+	 <link href="StyleSheet.css"type="text/css" rel="stylesheet"/>
 
 
 
@@ -103,6 +79,15 @@ echo '<div class ="center">';
 		//Count 
 		$filter_query = $connect->prepare($f_d_query);
 		$filter_query->execute($f_d_parameters);
+
+		//study if queried
+		if(!empty($Source_study)){
+		//if ($Source_study == TRUE) {
+		$study_query = $connect->prepare($f_d_query_study);
+		$study_query->execute($f_d_parameters);
+		$study_query_result = $study_query->fetchAll(PDO::FETCH_ASSOC);
+		}
+
 		//Preview
 		$filter_query_1 = $connect->prepare($f_d_query_1);
 		$filter_query_1->execute($f_d_parameters);
@@ -130,11 +115,7 @@ echo '<div class ="center">';
 	  
 	  if(!empty($values)){
 	  echo "<h4>".$names.": "." ". " ".$values." "."</h4>";
-	  
-		//echo "<h4>".$values." "."</h4>";
-		//echo "<br>";
 	}  
-	 // echo "<br>".""."<hr>";
   }
 	echo "<br>";
 	echo "<hr>";
@@ -143,34 +124,39 @@ echo '<div class ="center">';
 	
 	echo '<h3> Download dataset:  <a href ="download_button.php" title = "Note!" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="Here you can download your collected Data "> Download</a></h3> ';
 	echo "<br>";
-	echo '<h3>Refine your search: <a href ="alignment_refine.php" title = "Note!" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content=" Here you can go back to the orignal form with the search already filled in ">Refine </a> </h3> ';
+	echo '<h3>Refine your search: <a href ="form_alignment_refine.php" title = "Note!" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content=" Here you can go back to the orignal form with the search already filled in ">Refine </a> </h3> ';
 	echo "<br>";
 	echo '<h3><a href="alignment.php">Reset</a></h3>';
 
 	echo '<hr>';
 		echo "<br>" ;
 		echo "<h3> Preview of selected dataset (max 20 results): </h3>";
+		
+		if (!empty($Source_study) AND $Source_study == TRUE) {
+			foreach ($study_query_result as $list) {		
+		
+				echo "<br>";
+				echo "<h5> alignment ID:&emsp;".$list["ALI_ID"]."</h5>";
+				echo "<br>";
+				echo "<h5>source database:&emsp;". $list["FROM_DATABASE"]."</h5>";	
+				echo "<br>";
+				echo "<h5>data URL:&emsp;". $list["DATA_URL"]."</h5>";	
+				echo "<br>";
+				echo "<h5>study ID:&emsp;". $list["STUDY_ID"]."</h5>";	
+				echo "<br>";
+				echo "<h5>study URL:&emsp;". $list["STUDY_URL"]."</h5>";	
+				echo "<br>";
+				echo "<h5>citation:&emsp;". $list["CITATION"]."</h5>";	
+			}
+		}
 		foreach ($filter_query_result as $list) {		
 		
 		echo "<br>";
-		
-		echo $list["SEQ_NAME"];
-		echo "<br>";
-		echo $list["SEQ"];
-			
-			
+		echo implode("\n", $list);
+		echo "<br>";	
 		
 		}
-			
-			
-		
-			
-				
-			
-			
-		
-		
-		// echo "$modeld";
+
 		
 		echo " <br>";
 			

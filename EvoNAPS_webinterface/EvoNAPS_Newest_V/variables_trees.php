@@ -127,6 +127,7 @@ $_SESSION = array();
 				$_SESSION['number of hits preview']= $Nr_hits_preview;
 			}
 		}
+		echo $Nr_hits;
 
 		//Source Variables
 		$Source = [];

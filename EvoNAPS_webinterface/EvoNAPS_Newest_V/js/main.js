@@ -191,46 +191,33 @@ if (obj == "rank"){
    
 }
 
-/*
-function maxHitRank(value, id, ctrlFieldID){
-	max = 200
-	hitsNum = document.getElementById(id)
-	if(document.getElementById(ctrlFieldID).value){
-		if (value > max){
-			hitsNum.value = max
-		}
-	} else {
-		hitsNum.value = 1
-	}
-	
-} */
+ 
 
-function max_hit(value, id){
-	max = 200
-	if (value > max){
-		document.getElementById(id).value = max
+
+/*function updateFormVal(){
+	max = 200;
+	if (document.getElementById('id_search_btn').clicked){
+		document.getElementById('Nr_hits_id').value = 15
 	}
-}
-function updateFormVal(){
-	max = 200
-	if(document.getElementById('Nr_hits_rank').value){
-		value = document.getElementById('Nr_hits_rank')
-		if (value > max){
-			value.value = max
+	if(document.getElementById('Nr_hits_rank').value) {
+		maxValue = document.getElementById('Nr_hits_rank').value
+		if (maxValue.value > max){
+			maxValue.value = max
 		}
-	} else if(document.getElementById('Nr_hits_clade').value){
-		value = document.getElementById('Nr_hits_clade')
-		if (value > max){
-			value.value = max
+	} else if (document.getElementById('Nr_hits_clade').value) {
+		value = document.getElementById('Nr_hits_clade').value
+		if (maxValue.value > max){
+			maxValue.value = max
 		}
-	} else if(document.getElementById('Nr_hits_taxa').value){
-		value = document.getElementById('Nr_hits_taxa')
-		if (value > max){
-			value.value = max
+	} else if (document.getElementById('Nr_hits_taxa').value) {
+		value = document.getElementById('Nr_hits_taxa').value
+		if (maxValue.value > max){
+			maxValue.value = max
 		}
-	}
+	} 
 	
-}
+	return
+} */
 
 function cbChange(obj) {
     var cbs = document.getElementsByClassName("cb");
@@ -247,20 +234,28 @@ function loading() {
   
 }
 
-function AliSearchOptions(obj) {
+
+
+function AliSearchOptions(id, radio_id) {
     const field = ["id_search", "ranks_search", "clade_search", "sp_taxa_search"]
-    clickedField = document.getElementById(obj)
+	const fieldRadio = ["id_search_radio", "rank_search_radio", "clade_search_radio", "taxa_search_radio"]
+    clickedField = document.getElementById(id)
+	clicked_radio = document.getElementById(radio_id)
     displayValue = "";
-	displayRest = "none"
+	displayRest = "none";
+	clicked_radio.checked = true
     if (clickedField.style.display == ""){
         displayValue = "none";
-		//displayRest = ""
+		clicked_radio.checked = false
     }
     clickedField.style.display = displayValue;
+	
 	for (let i = 0; i < field.length; i++){
-		if (field[i] != obj){
+		if (field[i] != id){
 			fieldID = field[i]
+			radio_btn = fieldRadio[i]
 			document.getElementById(fieldID).style.display = displayRest;
+			document.getElementById(radio_btn).checked = false;
 		}
 	}
 }

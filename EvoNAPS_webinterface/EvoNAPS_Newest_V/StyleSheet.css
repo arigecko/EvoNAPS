@@ -1,0 +1,108 @@
+.center {
+    margin-left: 180px;
+margin-right: 180px;
+   margin-top: 30px; 
+   margin-bottom: 80px;
+}
+
+.nav-item{
+   padding-right:40px;
+}
+
+
+.navbar-brand{
+
+   padding-left: 50px;
+   
+}
+
+.search_option{
+   display: block;
+   width: 100%;
+   border: none;
+   background-color: #C4CBD3 ; 
+   color: black;
+   padding: 12px ;
+   font-size: 24px;
+   font-weight: bold;
+   font-family: sans-serif;
+   font-family: "JetBrains Mono",monospace;
+   border-radius: 18px;
+}
+.search_option:hover {
+background-color:  #324A7A; 
+color: #DFE6E9; 
+}
+
+.search_btn{
+   padding: 8px 30px;
+   display: block;
+   border: 1px #932E32;
+   background-color: #941418;
+   color: #DFE6E9;
+   font-size: 24px;
+   font-weight: bold;
+   font-family: sans-serif;
+   font-family: "JetBrains Mono",monospace;
+   margin:0 auto;
+   display:block;
+   border-radius: 18px;
+}
+.search_btn:hover {
+   background-color:  #831215;
+   color: #DFE6E9; 
+}
+
+.cb{
+   margin-left: 15px;
+}
+.suggestion{
+   font-style: italic;
+   font-size: 18px;
+   font-family: "JetBrains Mono",monospace;
+   font-family: sans-serif; 
+}
+.data_type_taxonomy{
+   text-align: center;
+   font-family: "JetBrains Mono",monospace;
+   font-size: 22px;
+}
+.text_form{
+   font-family: "JetBrains Mono",monospace;
+   font-size: 22px;
+   margin-left: 15px;
+   
+}
+.rank_form{
+   text-align: center;
+   font-family: "JetBrains Mono",monospace;
+   font-size: 22px;
+   height: 30px;
+   width: 240px;
+   border-radius: 12px;
+}
+.text_field{
+   width: 170px;
+   border-radius: 12px;
+   height: 30px;
+   width: 240px;
+   padding: 2px 55px;
+}
+.source_field{
+   font-family: "JetBrains Mono",monospace;
+   font-size: 22px;
+   
+}
+.dropdown{
+   width: 280px;
+   border-radius: 12px;
+}
+.text_form_pushed2{
+   margin-left: 140px;
+}
+.text_form_pushed{
+   margin-left: 70px;
+} 
+
+select:invalid {color: gray; }
+select option { color: black; } 

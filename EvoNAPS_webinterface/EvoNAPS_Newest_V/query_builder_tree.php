@@ -537,7 +537,9 @@ $first = false;
 			$f_d_query .= " LIMIT {$Nr_hits}";
 			$f_d_query_1 .= " LIMIT {$Nr_hits_preview}";
 
-			echo $f_d_query;
+
+			echo $f_d_query."<br>\n";
+			echo $f_d_query_1;
 			 
 			 
 			
