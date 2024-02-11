@@ -1,6 +1,6 @@
 .center {
-    margin-left: 180px;
-margin-right: 180px;
+   margin-left: 140px;
+   margin-right: 140px;
    margin-top: 30px; 
    margin-bottom: 80px;
 }
@@ -11,7 +11,6 @@ margin-right: 180px;
 
 
 .navbar-brand{
-
    padding-left: 50px;
    
 }
@@ -19,20 +18,20 @@ margin-right: 180px;
 .search_option{
    display: block;
    width: 100%;
-   border: none;
-   background-color: #C4CBD3 ; 
+   border: none; 
    color: black;
-   padding: 12px ;
-   font-size: 24px;
-   font-weight: bold;
+   padding: 8px ;
+   background-color: #C4CBD3 ; 
+   font-size: 22px;
+   /*font-weight: bold;*/
    font-family: sans-serif;
    font-family: "JetBrains Mono",monospace;
    border-radius: 18px;
 }
-.search_option:hover {
+/*.search_option:hover {
 background-color:  #324A7A; 
 color: #DFE6E9; 
-}
+} */
 
 .search_btn{
    padding: 8px 30px;
@@ -88,6 +87,17 @@ color: #DFE6E9;
    width: 240px;
    padding: 2px 55px;
 }
+.formfield {
+   display: flex;
+   align-items: baseline;
+ }
+.text_field_id{
+   width: 400px;
+   border-radius: 12px;
+   height: 200px;
+   /*width: 240px;*/
+   padding: 15px 15px;
+}
 .source_field{
    font-family: "JetBrains Mono",monospace;
    font-size: 22px;
@@ -103,6 +113,34 @@ color: #DFE6E9;
 .text_form_pushed{
    margin-left: 70px;
 } 
-
+td{
+    text-align: left; 
+    vertical-align: middle;
+}
+th{
+   text-align: left; 
+   vertical-align: middle;
+}
+/*
+.tooltip {
+   display: block;
+ }
+ .tooltip .tooltiptext {
+   visibility: hidden;
+   width: 120px;
+   background-color: black;
+   color: #fff;
+   text-align: center;
+   border-radius: 6px;
+   padding: 5px 0;
+ 
+   /* Position the tooltip */
+   /*position: absolute;
+   z-index: 1;
+ }
+ 
+ .tooltip:hover .tooltiptext {
+   visibility: visible;
+ } */
 select:invalid {color: gray; }
 select option { color: black; } 

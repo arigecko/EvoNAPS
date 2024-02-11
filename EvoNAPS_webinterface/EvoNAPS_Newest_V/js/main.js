@@ -111,8 +111,6 @@ function checkkall(){
 	cb2= document.getElementById('Lanfear');
 	cb3= document.getElementById('OrthoMaM');
 	 // TreeBASE added
-	//cb4= document.getElementById('all');
-	//if(cb4.checked == true){
    
 	cb4= document.getElementById('TreeBASE');
 	cb5= document.getElementById('all');
@@ -145,17 +143,17 @@ function checkkall(){
 }
 // added for alignment form
 function checkkallAli(obj){
-rank = ['PANDIT_rank', 'Lanfear_rank', 'OrthoMaM_rank', 'TreeBASE_rank', 'all_rank']
-clade = ['PANDIT_clade', 'Lanfear_clade', 'OrthoMaM_clade', 'TreeBASE_clade', 'all_clade']
-taxa = ['PANDIT_taxa', 'Lanfear_taxa', 'OrthoMaM_taxa', 'TreeBASE', 'all_taxa']
-idList = []
-if (obj == "rank"){
-	idList = rank
-} else if (obj == "clade"){
-	idList = clade
-} else if (obj == "taxa"){
-	idList = taxa
-}
+	rank = ['PANDIT_rank', 'Lanfear_rank', 'OrthoMaM_v10c_rank', 'OrthoMaM_v12a_rank', 'TreeBASE_rank', 'all_rank']
+	clade = ['PANDIT_clade', 'Lanfear_clade', 'OrthoMaM_v10c_clade', 'OrthoMaM_v12a_clade', 'TreeBASE_clade', 'all_clade']
+	taxa = ['PANDIT_taxa', 'Lanfear_taxa', 'OrthoMaM_v10c_taxa', 'OrthoMaM_v12a_taxa','TreeBASE', 'all_taxa']
+	idList = []
+	if (obj == "rank"){
+		idList = rank
+	} else if (obj == "clade"){
+		idList = clade
+	} else if (obj == "taxa"){
+		idList = taxa
+	}
 
 	cb1= document.getElementById(idList[0]);
 	cb2= document.getElementById(idList[1]);
@@ -163,61 +161,41 @@ if (obj == "rank"){
    
 	cb4= document.getElementById(idList[3]);
 	cb5= document.getElementById(idList[4]);
+	cb6= document.getElementById(idList[5]);
    
    
-   if(cb5.checked == true){
+   if(cb6.checked == true){
 	   document.getElementById(idList[0]).checked = false;
 	   document.getElementById(idList[1]).checked = false;
 	   document.getElementById(idList[2]).checked = false;
 	   document.getElementById(idList[3]).checked = false;
 	   
+	   document.getElementById(idList[4]).checked = false;
+	   
    }
    if(cb1.checked == true){
-	   cb5.checked = false;
+	   cb6.checked = false;
    
    }
    if(cb2.checked == true){
-	   cb5.checked = false;
+	   cb6.checked = false;
    
    }
    if(cb3.checked == true){
-	   cb5.checked = false;
+	   cb6.checked = false;
    
    }
    if(cb4.checked == true){
-	   cb5.checked = false;
+	   cb6.checked = false;
    
    }
+   if(cb5.checked == true){
+		cb6.checked = false;
+
+}
    
 }
 
- 
-
-
-/*function updateFormVal(){
-	max = 200;
-	if (document.getElementById('id_search_btn').clicked){
-		document.getElementById('Nr_hits_id').value = 15
-	}
-	if(document.getElementById('Nr_hits_rank').value) {
-		maxValue = document.getElementById('Nr_hits_rank').value
-		if (maxValue.value > max){
-			maxValue.value = max
-		}
-	} else if (document.getElementById('Nr_hits_clade').value) {
-		value = document.getElementById('Nr_hits_clade').value
-		if (maxValue.value > max){
-			maxValue.value = max
-		}
-	} else if (document.getElementById('Nr_hits_taxa').value) {
-		value = document.getElementById('Nr_hits_taxa').value
-		if (maxValue.value > max){
-			maxValue.value = max
-		}
-	} 
-	
-	return
-} */
 
 function cbChange(obj) {
     var cbs = document.getElementsByClassName("cb");
@@ -237,83 +215,80 @@ function loading() {
 
 
 function AliSearchOptions(id, radio_id) {
-    const field = ["id_search", "ranks_search", "clade_search", "sp_taxa_search"]
-	const fieldRadio = ["id_search_radio", "rank_search_radio", "clade_search_radio", "taxa_search_radio"]
-    clickedField = document.getElementById(id)
-	clicked_radio = document.getElementById(radio_id)
+    const field = ["id_search_field", "ranks_search_field", "clade_search_field", "sp_taxa_search_field"];
+	const fieldRadio = ["id_search", "rank_search", "clade_search", "taxa_search"];
+    clickedField = document.getElementById(id);
+	clicked_radio = document.getElementById(radio_id);
     displayValue = "";
 	displayRest = "none";
-	clicked_radio.checked = true
+	clicked_radio.checked = true;
     if (clickedField.style.display == ""){
         displayValue = "none";
-		clicked_radio.checked = false
+		clicked_radio.checked = false;
     }
     clickedField.style.display = displayValue;
 	
 	for (let i = 0; i < field.length; i++){
 		if (field[i] != id){
-			fieldID = field[i]
-			radio_btn = fieldRadio[i]
+			fieldID = field[i];
+			radio_btn = fieldRadio[i];
 			document.getElementById(fieldID).style.display = displayRest;
 			document.getElementById(radio_btn).checked = false;
 		}
 	}
 }
 
-
+function updateFormVal(){
 	
-
-
-/*
-function show3() {
-	
-	
-	 var Ali_Specs = document.getElementById('Ali_Specs');
-	 var checkb1 = document.getElementById('Alignment_Specs_Check');
-	 
-	 if(checkb1.checked){
-		 
-		 
-		 Ali_Specs = 'block';
-		 
-	 } else {
-		 
-		Ali_Specs = 'none';
-	 }
-}
-
-	var Ali_Specs = document.getElementById('Ali_Specs');
-	var cb1 = document.getElementById('Alignment_Specs_Check')
-	cb1.checked = false;
-	cb1.onchange = function show3() {
-		
-	Ali_Specs.style.display = this.checked ? 'block' : 'none';}
-	};
-	cb1.onchange();
-		
-		
+	const fieldRadio = ["id_search", "rank_search", "clade_search", "taxa_search"];
+	const sourceAll = ["all_rank", "all_clade", "all_taxa"];
+	idSearch = document.getElementById("id_search"); 
+	if (idSearch.checked == true){
+		for (let i = 0; i < sourceAll.length; i++){
+			document.getElementById(sourceAll[n]).checked = "";
+		}
+	} else {
+		for (let i = 1; i < fieldRadio.length; i++){
+			if  (document.getElementById(fieldRadio[i]).checked == true){
+				for (let n = 0; n < sourceAll.length; n++){
+					if (n != (i - 1)){
+					document.getElementById(sourceAll[n]).checked = false;
+					} /*else {
+						document.getElementById(sourceAll[n]).value = "";
+					}*/
+				}
+			}
+		} 
 	}
-	
-*/ 
-/*
-	 checkb1.checked = false;
-	 
-	 checkb1.onchange = function 
-		
-		{
-			
-			return document.getElementById('Ali_Specs').style.display='none'; 
-			
-			
-			
-		} else {
-			
-			document.getElementById('Restrict').style.visibility='block';
-			
+	idHits = document.getElementById("Nr_hits_id");
+	if (idSearch.checked == true) {
+		idHits.checked = true;
+		idHits.value = "100";
+	} else {
+		idHits.checked = false;
 		}
 	
+	/*
+	const idSearchField = document.getElementById("id_search_field").children;
+    const rankSearchField = document.getElementById("ranks_search_field").children;
+    const cladeSearchField = document.getElementById("clade_search_field").children;
+    const taxaSearchField = document.getElementById("sp_taxa_search_field").children;
+    const allFields = [idSearchField, rankSearchField, cladeSearchField, taxaSearchField];
+    for (let i = 0; i < fieldRadio.length; i++){
+        if (document.getElementById(fieldRadio[i]).checked = true) {
+            for (let fieldN = 0; fieldN < allFields.length; fieldN++){
+                if (fieldN != i){
+                    field = allFields[fieldN];
+                    for (let n = 0; n < field.length; n++){
+                        field[n].value = false;
+                    }
+                }
+            }
+        }
+    }*/
+
 }
-
-*/
-
 	
+
+
+
