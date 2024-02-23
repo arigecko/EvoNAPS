@@ -75,11 +75,10 @@ echo '<div class ="center">';
 
 		//Download Button 
 		
-//checking time
-$time_start = microtime(true); 		
-	
+		
 		//Count 
-		$filter_query = $connect->prepare($f_d_query_count);
+		//$filter_query = $connect->prepare($f_d_query);
+		$filter_query = $connect->prepare($count_query);
 		$filter_query ->execute($f_d_parameters);
 
 		//study if queried
@@ -92,41 +91,22 @@ $time_start = microtime(true);
 
 		$study_query_result = $study_query->fetchAll(PDO::FETCH_ASSOC);
 		}
-
+//checking time
+$time_start = microtime(true); 
 		//Preview
-		$filter_query_1 = $connect->prepare($f_d_query_prev);
+		$filter_query_1 = $connect->prepare($f_d_query_1);
 		$filter_query_1->execute($f_d_parameters);
 		
 		$filter_query_result = $filter_query_1->fetchAll(PDO::FETCH_ASSOC);
+		//testing another approach
 		
-
-//$time_end = microtime(true);
-//$execution_time = ($time_end - $time_start);	
-//echo '<b>Total Execution Time:</b> '.$execution_time.' Sec';
-//echo "<br>";
-// trying to fix results
-
-//STill need to fix the query 
-	if(!empty($Taxa_search) && $stringtaxa != ""){
-		$count = 0;
-		$count_step = $filter_query -> fetchColumn();	
-		while ($count_step){
-			//$count += $count_step;
-			$count++;
-			$count_step = $filter_query -> fetchColumn();	
-		}
-	}else {
-		$count = $filter_query -> fetchColumn();
-	}
-		//
-			
-		
+		$count = $filter_query -> fetchColumn();	
 
 		
 $time_end = microtime(true);
-$execution_time = ($time_end - $time_start);
+$execution_time = $time_end - $time_start;
 
-echo '<b>Total Execution Time:</b> '.$execution_time.' Sec';
+echo '<b>Total Execution Time:</b> '.$execution_time.' sec';
 echo "<br>";
 
 			echo "<br>";
@@ -138,7 +118,7 @@ echo "<br>";
 			}
 			echo " <br>";
 	
-			echo " <h4> If you are satisfied with your search you can download your result set down below.  </h4>";
+			echo " <h4> If you are satisfied with your search you can downlod your result set down below.  </h4>";
 			
 			echo "<br>";
 
@@ -183,7 +163,6 @@ echo "<br>";
 					echo '<th scope="row"> Alignment&nbsp;ID </th>';
 					echo '<td>'.$list["ALI_ID"].'</th>';
 					echo '</tr>';
-					
 					echo '<tr>'; 
 					echo '<th scope="row"> Source&nbsp;database </th>';
 					echo '<td>'.$list["FROM_DATABASE"].'</th>';
@@ -242,14 +221,14 @@ echo "<br>";
 			<thead>
 			  <tr>
 			  	<th scope="col">Ali ID</th>
-				<th scope="col">LCA</th>
-				<th scope="col">LCA Rank</th>
 				<th scope="col">TAXA</th>
 				<th scope="col">SITES</th>
 				<th scope="col">DISTINCT_PATTERNS</th>
 				<th scope="col">PARSIMONY_SITES</th>
 				<th scope="col">FRAC_WILDCARDS_GAPS</th>
 				<th scope="col">MODEL</th>
+				<th scope="col">BASE_MODEL</th>
+				<th scope="col">RHAS</th>
 				<th scope="col">LOGL</th>
 				 </tr>';
 		
@@ -258,18 +237,15 @@ echo "<br>";
 			foreach ($filter_query_result as $y){
 				 
 				echo '<tr>'; 
-				echo '<th scope="row"> '.'<a href = "http://evonaps.cibiv.univie.ac.at/results_alignment.php?datatype='.$DNA_Prot.'&Alignment_ID='.$y["ALI_ID"].'" target="_blank">'.$y["ALI_ID"].'</a>'.' </th>';
-				//echo '<th scope="row"> '.$y["ALI_ID"].' </th>';
-				echo '<td>'.$y["LCA"].'</th>';
-				echo '<td>'.$y["LCA_RANK_NAME"].'</th>';
-				echo '<td>'.$y["TAXA"].'</th>';
-				echo '<td>'.$y["SITES"].'</th>';
+				echo '<th scope="row"> '.$y["ALI_ID"].' </th>';
+				echo '<td>'.$y["SEQUENCES"].'</th>';
+				echo '<td>'.$y["COLUMNS"].'</th>';
 				echo '<td>'.$y["DISTINCT_PATTERNS"].'</th>';
 				echo '<td>'.$y["PARSIMONY_INFORMATIVE_SITES"].'</th>';
 				echo '<td>'.$y["FRAC_WILDCARDS_GAPS"].'</th>';
 				echo '<td>'.$y["MODEL"].'</th>';
-				//echo '<td>'.$y["BASE_MODEL"].'</th>';
-				//echo '<td>'.$y["RHAS_MODEL"].'</th>';
+				echo '<td>'.$y["BASE_MODEL"].'</th>';
+				echo '<td>'.$y["MODEL_RATE_HETEROGENEITY"].'</th>';
 				echo '<td>'.$y["LOGL"].'</th>';
 				echo '</tr>';
 				

@@ -13,35 +13,10 @@
 	
 	
 	
-	 <script src="js/main.js"></script> 
+    <script src="js/main_taxonomy.js"></script> 
 	 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-	 
-	 <style>
-	 
-	 .center {
-		 margin-left: 180px;
-    margin-right: 180px;
-		margin-top: 30px;
-		margin-bottom: 80px;
-	}
-	
-	.nav-item{
-		padding-right:40px;
-		
-		
-	}
-	
+	 <link href="StyleSheet.css"type="text/css" rel="stylesheet"/>
 
-	.navbar-brand{
-		
-		padding-left: 50px;
-		
-	}
-	 </style> 
-
-	
-
-	
 	
 	
 	 
@@ -81,48 +56,49 @@
       
 </nav>
   <body>
- <?php  session_start(); //echo "pls show the number:".$_SESSION['ALID']; ?>
   
-   <div class ="center">
+  <div class ="center">
   
-	<form action= "results_alignment.php" method="post" class="was-validated">
+   
+  
+  <form action="results_mult_ali.php" method="post" class="was-validated" onsubmit="updateFormVal()">
 	
-          <br>
-		<div class = "Radio_DNA_Prot">
-          <input type="radio" name="datatype" onclick = "show(0)" id="DNA_Radio" value="dna" <?php if($_SESSION['datatype']== "dna"){ echo "checked"; }?>>
-		    <label for = "DNA_Radio"> <h4> DNA</h4> </label>
-       
-	   
-		  <input type="radio" name="datatype" onclick = "show(1)" id="Prot_Radio" value="aa"<?php if($_SESSION['datatype']== "aa"){ echo "checked"; }?>>
-		    <label for = "Prot_Radio"> <h4> Proteins</h4> </label>
-			
-			</div>
-			
-			
-			<hr>
-			
-         
-			
-			<label for="Ali_ID"><h4> alignment id:</h4>  </label> 
-          <input type="text" name="Alignment_ID" id="Ali_ID" <?php if(!empty($_SESSION['Alignment_ID'])){ echo "value =".$_SESSION['Alignment_ID'];} ?> required>
-			
-			
-		  <hr>  
-		  <br>
-		  <br>
-		  <br>
+    <div class = "data_type_mult_ali">
+        <label for="data_type">  Data type:&nbsp; </label> 
+        <select name="data_type" class="rank_form" id="datatype" required >
+            <option value="" disabled selected hidden> choose type</option>
+            <option value="dna" <?php if(!empty($_SESSION['data type']) AND $_SESSION['data type']=="dna"){ echo " selected";}?>> DNA </option>
+				<option value="aa"<?php if(!empty($_SESSION['data type']) AND $_SESSION['data type']=="aa"){ echo " selected";}?>> Proteins </option>
+        </select>
+                    
+
+        <br>
+        <br>
+    </div>
+        
+        
+   
+        <br>
+        <fieldset  class="text_form formfield" id="id_search_field">
+        <label for="Ali_ID" title="IDs should be separated by a and/or whitespace"> Alignment ID: </label> 
+				<textarea type="text" name="Alignment_ID" id="Ali_ID" class="text_field_id" wrap="soft" placeholder="IDs should be separated by a comma and/or whitespace" ><?php if(!empty($_SESSION['Alignment ID'])){ echo $_SESSION['Alignment ID'];} ?> </textarea>
+				
+			<!-- class="text_form_pushed" -->
+				<input type="checkbox" class="text_form_pushed" name="source_study"  id="source_study" value="TRUE" <?php if(!empty($_SESSION['source study'])){ echo "checked";} ?>>
+				<label for = "source_study"> Provide study information </label> 
+        </fieldset>
+        
+
 		  <br>
 		  
-		  
-		  
-		  
-		   <section class="filter_input">
+		    <section class="filter_input">
 		  <div class = "filter_input" id = "f1_input">
 		  		
-          <input class="btn btn-primary btn-lg" id= "submit" onclick= "loading()" type= "submit" value="Search database" >
+          <input class="search_btn" id= "submit" onclick= "loading()" type= "submit" value="Search database" >
 		  </div>
 		  
-		  <section class="damn">
+		  
+		 <section class="damn">
   <!-- Footer -->
   <footer class="bg-secondary text-white text-center fixed-bottom" >
     <!-- Grid container -->
@@ -152,10 +128,8 @@
   </footer>
   <!-- Footer -->
 </section>	
-		 
+		  
 		  
 		  </div>
 		 </form>
         </section>
-		
-		

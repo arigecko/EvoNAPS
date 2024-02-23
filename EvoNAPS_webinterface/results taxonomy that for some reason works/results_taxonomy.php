@@ -77,7 +77,7 @@ echo '<div class ="center">';
 		
 //checking time
 $time_start = microtime(true); 		
-	
+
 		//Count 
 		$filter_query = $connect->prepare($f_d_query_count);
 		$filter_query ->execute($f_d_parameters);
@@ -183,7 +183,6 @@ echo "<br>";
 					echo '<th scope="row"> Alignment&nbsp;ID </th>';
 					echo '<td>'.$list["ALI_ID"].'</th>';
 					echo '</tr>';
-					
 					echo '<tr>'; 
 					echo '<th scope="row"> Source&nbsp;database </th>';
 					echo '<td>'.$list["FROM_DATABASE"].'</th>';
@@ -242,14 +241,14 @@ echo "<br>";
 			<thead>
 			  <tr>
 			  	<th scope="col">Ali ID</th>
-				<th scope="col">LCA</th>
-				<th scope="col">LCA Rank</th>
 				<th scope="col">TAXA</th>
 				<th scope="col">SITES</th>
 				<th scope="col">DISTINCT_PATTERNS</th>
 				<th scope="col">PARSIMONY_SITES</th>
 				<th scope="col">FRAC_WILDCARDS_GAPS</th>
 				<th scope="col">MODEL</th>
+				<th scope="col">BASE_MODEL</th>
+				<th scope="col">RHAS</th>
 				<th scope="col">LOGL</th>
 				 </tr>';
 		
@@ -258,18 +257,15 @@ echo "<br>";
 			foreach ($filter_query_result as $y){
 				 
 				echo '<tr>'; 
-				echo '<th scope="row"> '.'<a href = "http://evonaps.cibiv.univie.ac.at/results_alignment.php?datatype='.$DNA_Prot.'&Alignment_ID='.$y["ALI_ID"].'" target="_blank">'.$y["ALI_ID"].'</a>'.' </th>';
-				//echo '<th scope="row"> '.$y["ALI_ID"].' </th>';
-				echo '<td>'.$y["LCA"].'</th>';
-				echo '<td>'.$y["LCA_RANK_NAME"].'</th>';
+				echo '<th scope="row"> '.$y["ALI_ID"].' </th>';
 				echo '<td>'.$y["TAXA"].'</th>';
 				echo '<td>'.$y["SITES"].'</th>';
 				echo '<td>'.$y["DISTINCT_PATTERNS"].'</th>';
 				echo '<td>'.$y["PARSIMONY_INFORMATIVE_SITES"].'</th>';
 				echo '<td>'.$y["FRAC_WILDCARDS_GAPS"].'</th>';
 				echo '<td>'.$y["MODEL"].'</th>';
-				//echo '<td>'.$y["BASE_MODEL"].'</th>';
-				//echo '<td>'.$y["RHAS_MODEL"].'</th>';
+				echo '<td>'.$y["BASE_MODEL"].'</th>';
+				echo '<td>'.$y["MODEL_RATE_HETEROGENEITY"].'</th>';
 				echo '<td>'.$y["LOGL"].'</th>';
 				echo '</tr>';
 				

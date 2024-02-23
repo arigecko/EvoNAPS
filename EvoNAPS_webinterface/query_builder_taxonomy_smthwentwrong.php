@@ -1,81 +1,23 @@
 <?php
-
-//include 'variables_alignment.php';
-//include 'DBConnect_Alignment.php';
-//include 'downloadme_alignment.php';
-
-session_start();
-ini_set('memory_limit','-1');
-include "DB_credentials.php";
-
-
-$DNA_Prot = isset($_SESSION['data type']) ? $_SESSION['data type'] : ""; 
-$Tax_resolv = isset($_SESSION['resolved taxonomy']) ? $_SESSION['resolved taxonomy'] : "";
- 
-// catching values applicable to id search option
-
-$Ali_ID_arr =  isset($_SESSION['Alignment ID']) ? $_SESSION['Alignment ID'] : "";			
-$ID_search = isset($_SESSION['id search']) ? $_SESSION['id search'] : "";
-$Source_study = isset($_SESSION['source study']) ? $_SESSION['source study'] : "";
-
-// catching values applicable to rank search option
-
-$Rank_search = isset($_SESSION['rank search']) ? $_SESSION['rank search'] : ""; 		
-$Min_rank = isset($_SESSION['min rank']) ? $_SESSION['min rank'] : "";
-$Max_rank = isset($_SESSION['max rank']) ? $_SESSION['max rank'] : "";
-
-
-// catching values applicable to LCA search option
-
-$LCA_search = isset($_SESSION['lca search']) ? $_SESSION['lca search'] : ""; 
-$LCA = isset($_SESSION['LCA']) ? $_SESSION['LCA'] : "";
-
-// catching values applicable to ancestor search option
-
-$Ancestor_search = isset($_SESSION['ancestor search']) ? $_SESSION['ancestor search'] : ""; 
-$Ancestor_rank = isset($_SESSION['Ancestor rank']) ? $_SESSION['Ancestor rank'] : "";
-$Ancestor = isset($_SESSION['Ancestor']) ? $_SESSION['Ancestor'] : "";
-
-// catching values applicable to taxa search option
-
-$Taxa_search = isset($_SESSION['taxa search']) ? $_SESSION['taxa search'] : ""; 
-$Taxa_ID_1 = isset($_SESSION['Taxa ID 1']) ? $_SESSION['Taxa ID 1'] : "";
-$Taxa_ID_2 = isset($_SESSION['Taxa ID 2']) ? $_SESSION['Taxa ID 2'] : "";
-$Taxa_ID_3 = isset($_SESSION['Taxa ID 3']) ? $_SESSION['Taxa ID 3'] : "";
-$Taxa_ID_4 = isset($_SESSION['Taxa ID 4']) ? $_SESSION['Taxa ID 4'] : "";
-$Taxa_ID_5 = isset($_SESSION['Taxa ID 5']) ? $_SESSION['Taxa ID 5'] : "";
-$Taxa_rank_max = isset($_SESSION['taxa rank max']) ? $_SESSION['taxa rank max'] : "";
-$Taxa_rank_min = isset($_SESSION['taxa rank min']) ? $_SESSION['taxa rank min'] : "";
-$Taxa_LCA = isset($_SESSION['Taxa_LCA']) ? $_SESSION['Taxa_LCA'] : "";			
-
-
-//additional parameters 
-
-$Min_Nr_Seq = isset($_SESSION['min number of sequences']) ? $_SESSION['min number of sequences'] : "";
-$Max_Nr_Seq = isset($_SESSION['max number of sequences']) ? $_SESSION['max number of sequences'] : "";
-$Min_Nr_sites = isset($_SESSION['min number of sites']) ? $_SESSION['min number of sites'] : "";
-$Max_Nr_sites = isset($_SESSION['max number of sites']) ? $_SESSION['max number of sites'] : "";		
-$wildcard_gaps_fraction = isset($_SESSION['wildcard gaps fraction']) ? $_SESSION['wildcard gaps fraction'] : "";
-$distinct_patterns_fraction = isset($_SESSION['distinct patterns fraction']) ? $_SESSION['distinct patterns fraction'] : "";
-$parsimony_sites_fraction = isset($_SESSION['parsimony sites fraction']) ? $_SESSION['parsimony sites fraction'] : "";
-$Nr_hits = $_SESSION['max number of datasets'];	
-
-//Source Variables
-
-$Source = [];
-$Pan = isset($_SESSION['PANDIT']) ? $_SESSION['PANDIT'] : "";
-$Ortho_v1 = isset($_SESSION['OrthoMaM v10c']) ? $_SESSION['OrthoMaM v10c'] : "";
-$Ortho_v2 = isset($_SESSION['OrthoMaM v12a']) ? $_SESSION['OrthoMaM v12a'] : "";
-$Lanf = isset($_SESSION['Lanfear']) ? $_SESSION['Lanfear'] : "";
-$TreeB = isset($_POST['TreeBASE']) ? $_SESSION['TreeBASE'] : "";
-$ALL = isset($_SESSION['all sources']) ? $_SESSION['all sources'] : "";
 		
-
-
-//////////////////////String Building Source ///////////////////////
+	//Include files and set memory limit
+	
+	ini_set('memory_limit','1000M');
+	include('variables_taxonomy.php');
+	include('DB_credentials.php');
+		
+	//initalize query parameters
+	$f_d_conditions = [];
+	$f_d_parameters = [];
+	$f_d_parameters_source = [];
+	$usedna = false;
+		
+		
+		
+			/////////////////////String Building Source ///////////////////////
 
 $stringsource = "";
-$stringall = "'PANDIT','OrthoMaM',  'Lanfear', 'TreeBASE'"; //'OrthoMaM_v12a',
+$stringall = "'PANDIT','OrthoMaM', 'Lanfear', 'TreeBASE'"; // 'OrthoMaM_v12a', 
 
 
 if(!empty($Ortho_v1)){
@@ -127,20 +69,19 @@ $first = false;
 	}
 		
 		// Dynamic Querys Parameters
-		$f_d_conditions = [];
-		$f_d_parameters = [];
-		$f_d_parameters_source = [];
-			
+		
+		
 		if (!empty($ID_search) AND $ID_search == TRUE){
 
-			$Ali_ID = explode(",", $Ali_ID_arr);
+			$Ali_ID = explode(", ", $Ali_ID_arr);
 			$Ali_ID = array_diff($Ali_ID, ["-1"]);
 			$Ali_ID = array_slice($Ali_ID, 0, 100); // limit for alignments 
 			
 
 			if (count($Ali_ID) == 1) {
 				$select = "`SEQ_NAME`, `SEQ`";
-				$f_d_query = "SELECT ".$select . " FROM ";	
+				$f_d_query_1 = "SELECT ".$select . " FROM ";	
+				$f_d_query = "SELECT count(*) FROM ";
 				if (isset($Source_study) AND $Source_study == TRUE) {
 					$select_study = "`ali`.`ALI_ID`, `ali`.`FROM_DATABASE`, `ali`.`DATA_URL`, `ali`.`STUDY_ID`, `study`.`STUDY_URL`, `study`.`CITATION` ";
 					$f_d_query_study = "SELECT ".$select_study . " FROM ";	
@@ -148,8 +89,9 @@ $first = false;
 				
 			} else {
 				/*$select = " DISTINCT `ALI_ID`";*/
-				$select = "`ali`.`ALI_ID`, `ali_tax`.`LCA_RANK_NAME`, `ali`.`TAXA`, `ali`.`SITES`, `ali`.`DISTINCT_PATTERNS`, `ali`.`PARSIMONY_INFORMATIVE_SITES`, `ali`.`FRAC_WILDCARDS_GAPS`, `tree`.`MODEL`, `tree`.`BASE_MODEL`, `tree`.`RHAS_MODEL`, ROUND(`tree`.`LOGL`,4) AS LOGL ";
-				$f_d_query = "SELECT ".$select . " FROM ";	
+				$select = "`ali`.`ALI_ID`, `ali`.`TAXA`, `ali`.`SITES`, `ali`.`DISTINCT_PATTERNS`, `ali`.`PARSIMONY_INFORMATIVE_SITES`, `ali`.`FRAC_WILDCARDS_GAPS`, `tree`.`MODEL`, `tree`.`BASE_MODEL`, `tree`.`RHAS_MODEL`, ROUND(`tree`.`LOGL`,4) AS LOGL ";
+				$f_d_query_1 = "SELECT ".$select . " FROM ";	
+				$f_d_query = "SELECT count(`ALI_ID`) FROM ";
 			}
 
 			
@@ -164,8 +106,12 @@ $first = false;
 					// check if one or multiple ali IDs were inputted
 					if (count($Ali_ID) == 1) {
 					$f_d_query .= " `dna_sequences` ";
+					//Preview
+					$f_d_query_1 .= " `dna_sequences` ";
 					} else {
 					$f_d_query .= " `dna_alignments` as `ali` INNER JOIN `dna_trees` as `tree` USING (`ALI_ID`) ";
+					//Preview
+					$f_d_query_1 .= " `dna_alignments` as `ali` INNER JOIN `dna_trees` as `tree` USING (`ALI_ID`) ";
 					}
 					// Study information
 					if (isset($Source_study) AND $Source_study == TRUE) {
@@ -177,8 +123,10 @@ $first = false;
 					
 					if (count($Ali_ID) == 1) {
 						$f_d_query .= " `dna_sequences` ";
+						$f_d_query_1 .= " `dna_sequences` ";
 					} else {
 						$f_d_query .= " `aa_alignments` as `ali` INNER JOIN `aa_trees` as `tree` USING (`ALI_ID`) ";
+						$f_d_query_1 .= " `aa_alignments` as `ali` INNER JOIN `aa_trees` as `tree` USING (`ALI_ID`) ";
 						if (isset($Source_study) AND $Source_study == TRUE) {
 						$f_d_query_study .= " `aa_alignments` as `ali` INNER JOIN `studies` as `study` using (`STUDY_ID`) ";
 						}
@@ -192,8 +140,10 @@ $first = false;
 			//Fuze conditions in 1 string
 			if (count($Ali_ID) == 1) {
 				$f_d_query .= " WHERE `ALI_ID` IN "."$Ali_ID_list";
+				$f_d_query_1 .= " WHERE `ALI_ID` IN "."$Ali_ID_list";
 			} else {
 				$f_d_query .= " WHERE `ALI_ID` IN "."$Ali_ID_list"." AND `tree`.`TREE_TYPE` = 'ml' AND `tree`.`ORIGINAL_ALI`='1' ";
+				$f_d_query_1 .= " WHERE `ALI_ID` IN "."$Ali_ID_list"." AND `tree`.`TREE_TYPE` = 'ml' AND `tree`.`ORIGINAL_ALI`='1' ";
 			}
 				
 
@@ -204,13 +154,24 @@ $first = false;
 				}
 			
 			$f_d_query .= " LIMIT {$Nr_hits} ";
+			$f_d_query_1 .= " LIMIT {$Nr_hits_preview} ";
 				
-				
+		
+			//Echo string for the query
+			echo $f_d_query."<br>\n";
+			echo $f_d_query_1."<br>\n";
+			
+			if (isset($Source_study) AND $Source_study == TRUE) {
+				echo $f_d_query_study;
+			}
+			
 		} catch(PDOException $e) {
 				
 			echo "Connection Stable Query wrong " . $e->getMessage(). $f_d_query;
 			}
 		
+
+
 
 
 
@@ -232,10 +193,12 @@ $first = false;
 
 			
 		} elseif (!empty($Rank_search) AND $Rank_search == TRUE) {
-			$select = "`ali`.`ALI_ID`, `ali_tax`.`LCA_RANK_NAME`, `ali`.`TAXA`, `ali`.`SITES`, `ali`.`DISTINCT_PATTERNS`, `ali`.`PARSIMONY_INFORMATIVE_SITES`, `ali`.`FRAC_WILDCARDS_GAPS`, `tree`.`MODEL`, `tree`.`BASE_MODEL`, `tree`.`RHAS_MODEL`, ROUND(`tree`.`LOGL`,4) AS LOGL ";
+			$select = "`ali`.`ALI_ID`, `ali`.`TAXA`, `ali`.`SITES`, `ali`.`DISTINCT_PATTERNS`, `ali`.`PARSIMONY_INFORMATIVE_SITES`, `ali`.`FRAC_WILDCARDS_GAPS`, `tree`.`MODEL`, `tree`.`BASE_MODEL`, `tree`.`RHAS_MODEL`, ROUND(`tree`.`LOGL`,4) AS LOGL ";
 
 						
-			$f_d_query = " SELECT ".$select . " FROM ";
+			$f_d_query_1 = " SELECT ".$select . " FROM ";
+							
+			$f_d_query = " SELECT count(*) FROM ";
 						
 
 			try {
@@ -245,16 +208,30 @@ $first = false;
 					//Alignments Join 
 					$f_d_query .= " `dna_alignments_taxonomy` as `ali_tax` INNER JOIN `dna_alignments` as `ali` USING (`ALI_ID`) ";
 					//Trees Join 
-					$f_d_query .= " INNER JOIN `dna_trees` as `tree` USING (`ALI_ID`) ";						
+					$f_d_query .= " INNER JOIN `dna_trees` as `tree` USING (`ALI_ID`) ";
+
+					//Preview
+					//Alignments Join 
+					$f_d_query_1 .= " `dna_alignments_taxonomy` as `ali_tax` INNER JOIN `dna_alignments` as `ali` USING (`ALI_ID`) ";
+					//Trees Join 
+					$f_d_query_1 .= " INNER JOIN `dna_trees` as `tree` USING (`ALI_ID`) ";						
 
 				}else{
 					//Alignments Join 
 					$f_d_query .= " `aa_alignments_taxonomy` as `ali_tax` INNER JOIN `aa_alignments` as `ali` USING (`ALI_ID`) ";
 					//Trees Join 
 					$f_d_query .= " INNER JOIN `aa_alignments` as `ali` USING (`ALI_ID`) INNER JOIN `aa_trees` as `tree` USING (`ALI_ID`) ";
+					
+					//Preview
+					//Alignments Join 
+					$f_d_query_1 .= " `aa_alignments_taxonomy` as `ali_tax` INNER JOIN `aa_alignments` as `ali` USING (`ALI_ID`) ";
+					//Trees Join 
+					$f_d_query_1 .= " INNER JOIN `aa_alignments` as `ali` USING (`ALI_ID`) INNER JOIN `aa_trees` as `tree` USING (`ALI_ID`) ";
 						
 				}
 
+
+		
 					
 					// dynamic query
 
@@ -262,6 +239,7 @@ $first = false;
 					if(!empty($Tax_resolv)){
 						$f_d_conditions[] .=  '`ali_tax`.`TAX_RESOLVED` =? ';
 						$f_d_parameters[] .=  $Tax_resolv;
+
 					}
 
 					if (!empty($Max_rank)){
@@ -331,19 +309,26 @@ $first = false;
 				if ($ALL == "checked"){
 						
 					$f_d_query .= " WHERE `ali`.`FROM_DATABASE` in " . "(" . $stringall. ")";
+					$f_d_query_1 .= " WHERE `ali`.`FROM_DATABASE` in " . "(" . $stringall. ")";
 	
 					}elseif(!empty($Source)){
 						
 						$f_d_query .= " WHERE `ali`.`FROM_DATABASE` in " . "(" . $stringsource. ")";
+						$f_d_query_1 .= " WHERE `ali`.`FROM_DATABASE` in " . "(" . $stringsource. ")";
 						
 					}
 					
 					//Fuze conditions in 1 string
 				if($f_d_conditions){
 					$f_d_query .= " AND ".implode(" AND ", $f_d_conditions)." AND `tree`.`TREE_TYPE` = 'ml' AND `tree`.`ORIGINAL_ALI`='1' ";
+					$f_d_query_1 .= " AND ".implode(" AND ", $f_d_conditions)." AND `tree`.`TREE_TYPE` = 'ml' AND `tree`.`ORIGINAL_ALI`='1' ";
 				}
 					$f_d_query .= "LIMIT {$Nr_hits} ";
+					$f_d_query_1 .= "LIMIT {$Nr_hits_preview} ";
 					
+				//Echo string for the query
+				echo $f_d_query."<br>\n";
+				echo ($f_d_query_1);
 					
 					
 			}catch(PDOException $e) {				
@@ -361,25 +346,40 @@ $first = false;
 
 			} elseif (!empty($LCA_search) AND $LCA_search == TRUE) {
 
-				$select = "`ali`.`ALI_ID`, `ali_tax`.`LCA_RANK_NAME`, `ali`.`TAXA`, `ali`.`SITES`, `ali`.`DISTINCT_PATTERNS`, `ali`.`PARSIMONY_INFORMATIVE_SITES`, `ali`.`FRAC_WILDCARDS_GAPS`, `tree`.`MODEL`, `tree`.`BASE_MODEL`, `tree`.`RHAS_MODEL`, ROUND(`tree`.`LOGL`,4) AS LOGL ";
+				$select = "`ali`.`ALI_ID`, `ali`.`TAXA`, `ali`.`SITES`, `ali`.`DISTINCT_PATTERNS`, `ali`.`PARSIMONY_INFORMATIVE_SITES`, `ali`.`FRAC_WILDCARDS_GAPS`, `tree`.`MODEL`, `tree`.`BASE_MODEL`, `tree`.`RHAS_MODEL`, ROUND(`tree`.`LOGL`,4) AS LOGL ";
 						
-				$f_d_query = " SELECT ".$select . " FROM ";
+				$f_d_query_1 = " SELECT ".$select . " FROM ";
+								
+				$f_d_query = " SELECT count(*) FROM ";
 							
 	
 				try {
 							
 					//decide to search in DNA or Proteins 
 					if($DNA_Prot == "dna"){
+
 						//Alignment join
 						$f_d_query .= " `dna_alignments_taxonomy` as `ali_tax` INNER JOIN `dna_alignments` as `ali` using (`ALI_ID`) ";
 						//Tree Join 
 						$f_d_query .= " INNER JOIN `dna_trees` as `tree` USING (`ALI_ID`) ";
 
-					}else if ($DNA_Prot == "aa"){
+						//Preview
 						//Alignment join
+						$f_d_query_1 .= " `dna_alignments_taxonomy` as `ali_tax` INNER JOIN `dna_alignments` as `ali` using (`ALI_ID`) ";
+						//Tree Join 
+						$f_d_query_1 .= " INNER JOIN `dna_trees` as `tree` USING (`ALI_ID`) ";
+
+					}else if ($DNA_Prot == "aa"){
+								
 						$f_d_query .= " `aa_alignments_taxonomy` as `ali_tax` INNER JOIN `aa_alignments` as `ali` using (`ALI_ID`) ";
 						//Trees Join 
-						$f_d_query .= " INNER JOIN `aa_trees` as `tree` USING (`ALI_ID`) ";	
+						$f_d_query .= " INNER JOIN `aa_trees` as `tree` USING (`ALI_ID`) ";
+
+						//Preview
+						//Alignment join
+						$f_d_query_1 .= " `aa_alignments_taxonomy` as `ali_tax` INNER JOIN `aa_alignments` as `ali` using (`ALI_ID`) ";
+						//Trees Join 
+						$f_d_query_1 .= " INNER JOIN `aa_trees` as `tree` USING (`ALI_ID`) ";	
 					}
 	
 					// dynamic query
@@ -397,6 +397,7 @@ $first = false;
 								$f_d_parameters[] .=  $LCA;
 							} else {
 								$f_d_query .= " INNER JOIN `taxonomy` as `tax` ON (`ali_tax`.`LCA_TAX_ID`=`tax`.`TAX_ID`) ";
+								$f_d_query_1 .= " INNER JOIN `taxonomy` as `tax` ON (`ali_tax`.`LCA_TAX_ID`=`tax`.`TAX_ID`) ";
 
 								$f_d_conditions[] .=  '`tax`.`TAX_NAME` =? ';
 								$f_d_parameters[] .=  $LCA;
@@ -455,20 +456,28 @@ $first = false;
 					if ($ALL == "checked"){
 							
 						$f_d_query .= "WHERE  `ali`.`FROM_DATABASE` in " . "(" . $stringall. ")";
+						$f_d_query_1 .= "WHERE  `ali`.`FROM_DATABASE` in " . "(" . $stringall. ")";
 		
 						}elseif(!empty($Source)){
 							
-							$f_d_query .= "WHERE `ali`.`FROM_DATABASE` in " . "(" . $stringsource. ")";		
+							$f_d_query .= "WHERE `ali`.`FROM_DATABASE` in " . "(" . $stringsource. ")";
+							$f_d_query_1 .= "WHERE `ali`.`FROM_DATABASE` in " . "(" . $stringsource. ")";		
 						}
 						
 					//Fuze conditions in 1 string
 					if($f_d_conditions){
 						$f_d_query .= " AND ".implode(" AND ", $f_d_conditions)." AND `tree`.`TREE_TYPE` = 'ml' AND `tree`.`ORIGINAL_ALI`='1' ";
+						$f_d_query_1 .= " AND ".implode(" AND ", $f_d_conditions)." AND `tree`.`TREE_TYPE` = 'ml' AND `tree`.`ORIGINAL_ALI`='1' ";
 					}
 					
 					//Limit number of hits
 					$f_d_query .= " LIMIT {$Nr_hits} ";
+					$f_d_query_1 .= " LIMIT {$Nr_hits_preview} ";
 						
+					//Echo string for the query
+					echo $f_d_query."<br>\n";
+					echo $f_d_query_1;
+
 						
 				}catch(PDOException $e) {				
 					echo "Connection Stable Query wrong " . $e->getMessage(). $f_d_query;
@@ -480,23 +489,37 @@ $first = false;
 			
 				} elseif (!empty($Ancestor_search) AND $Ancestor_search == TRUE) {
 
-					$select = "`ali`.`ALI_ID`, `ali_tax`.`LCA_RANK_NAME`, `ali`.`TAXA`, `ali`.`SITES`, `ali`.`DISTINCT_PATTERNS`, `ali`.`PARSIMONY_INFORMATIVE_SITES`, `ali`.`FRAC_WILDCARDS_GAPS`, `tree`.`MODEL`, `tree`.`BASE_MODEL`, `tree`.`RHAS_MODEL`, ROUND(`tree`.`LOGL`,4) AS LOGL ";
+					$select = "`ali`.`ALI_ID`, `ali`.`TAXA`, `ali`.`SITES`, `ali`.`DISTINCT_PATTERNS`, `ali`.`PARSIMONY_INFORMATIVE_SITES`, `ali`.`FRAC_WILDCARDS_GAPS`, `tree`.`MODEL`, `tree`.`BASE_MODEL`, `tree`.`RHAS_MODEL`, ROUND(`tree`.`LOGL`,4) AS LOGL ";
 							
-					$f_d_query = " SELECT ".$select . " FROM ";
+					$f_d_query_1 = " SELECT ".$select . " FROM ";
+									
+					$f_d_query = " SELECT count(*) FROM ";
+								
 		
 					try {
 						//decide to search in DNA or Proteins
 						if($DNA_Prot == "dna"){
-							//Alignment join
+									
+							//Alignment join		
 							$f_d_query .= " `dna_alignments_taxonomy` as `ali_tax` INNER JOIN `dna_alignments` as `ali` using (`ALI_ID`) ";
 							//Tree join
 							$f_d_query .= " INNER JOIN `dna_trees` as `tree` USING (`ALI_ID`) ";
+							
+							//Preview
+							$f_d_query_1 .= " `dna_alignments_taxonomy` as `ali_tax` INNER JOIN `dna_alignments` as `ali` using (`ALI_ID`) ";
+							//Tree join
+							$f_d_query_1 .= " INNER JOIN `dna_trees` as `tree` USING (`ALI_ID`) ";
 
 						}else if ($DNA_Prot == "aa"){
 							//Alignment join		
 							$f_d_query .= " `aa_alignments_taxonomy` as `ali_tax` INNER JOIN `aa_alignments` as `ali` using (`ALI_ID`) ";
 							//Tree join
 							$f_d_query .= " INNER JOIN `aa_trees` as `tree` USING (`ALI_ID`) ";
+
+							//Preview
+							$f_d_query_1 .= " `aa_alignments_taxonomy` as `ali_tax` INNER JOIN `aa_alignments` as `ali` using (`ALI_ID`) ";
+							//Tree join
+							$f_d_query_1 .= " INNER JOIN `aa_trees` as `tree` USING (`ALI_ID`) ";
 								
 						}
 
@@ -514,8 +537,8 @@ $first = false;
 									$f_d_conditions[] .=  '`ali_tax`.`LCA_TAX_ID` =? ';
 									$f_d_parameters[] .=  $Ancestor;
 								} else {
-									$f_d_query_count.= " INNER JOIN `taxonomy` as `tax` ON (`ali_tax`.`LCA_TAX_ID`=`tax`.`TAX_ID`) ";
 									$f_d_query .= " INNER JOIN `taxonomy` as `tax` ON (`ali_tax`.`LCA_TAX_ID`=`tax`.`TAX_ID`) ";
+									$f_d_query_1 .= " INNER JOIN `taxonomy` as `tax` ON (`ali_tax`.`LCA_TAX_ID`=`tax`.`TAX_ID`) ";
 	
 									$f_d_conditions[] .=  '`tax`.`TAX_NAME` =? ';
 									$f_d_parameters[] .=  $Ancestor;
@@ -574,37 +597,63 @@ $first = false;
 						if ($ALL == "checked"){
 								
 							$f_d_query .= "WHERE  `ali`.`FROM_DATABASE` in " . "(" . $stringall. ")";
+							$f_d_query_1 .= "WHERE  `ali`.`FROM_DATABASE` in " . "(" . $stringall. ")";
 			
 							}elseif(!empty($Source)){
 								
 								$f_d_query .= "WHERE `ali`.`FROM_DATABASE` in " . "(" . $stringsource. ")";
+								$f_d_query_1 .= "WHERE `ali`.`FROM_DATABASE` in " . "(" . $stringsource. ")";
 								
 							}
 							
 							//Fuze conditions in 1 string
 						if($f_d_conditions){
 							$f_d_query .= " AND ".implode(" AND ", $f_d_conditions)." AND `tree`.`TREE_TYPE` = 'ml' AND `tree`.`ORIGINAL_ALI`='1' ";
+							$f_d_query_1 .= " AND ".implode(" AND ", $f_d_conditions)." AND `tree`.`TREE_TYPE` = 'ml' AND `tree`.`ORIGINAL_ALI`='1' ";
 						}
 						
 						//Limit number of hits
 						$f_d_query .= " LIMIT {$Nr_hits} ";
+						$f_d_query_1 .= " LIMIT {$Nr_hits_preview} ";
+							
+						//Echo string for the query
+						echo $f_d_query."<br>\n";
+						echo $f_d_query_1;
+							
 							
 							
 					}catch(PDOException $e) {				
 						echo "Connection Stable Query wrong " . $e->getMessage(). $f_d_query;
 						}
 
-	
+
+
+
+
+
+
+
+
+
+
+
+
+			
 
 			//////// searching for specified taxa//////////
 		} elseif (!empty($Taxa_search) AND $Taxa_search == TRUE) {
 
 
-			$select = "`ali`.`ALI_ID`, `ali_tax`.`LCA_RANK_NAME`, `ali`.`TAXA`, `ali`.`SITES`, `ali`.`DISTINCT_PATTERNS`, `ali`.`PARSIMONY_INFORMATIVE_SITES`, `ali`.`FRAC_WILDCARDS_GAPS`, `tree`.`MODEL`, `tree`.`BASE_MODEL`, `tree`.`RHAS_MODEL`, ROUND(`tree`.`LOGL`,4) AS LOGL ";
+			$select = "`ali`.`ALI_ID`, `ali`.`TAXA`, `ali`.`SITES`, `ali`.`DISTINCT_PATTERNS`, `ali`.`PARSIMONY_INFORMATIVE_SITES`, `ali`.`FRAC_WILDCARDS_GAPS`, `tree`.`MODEL`, `tree`.`BASE_MODEL`, `tree`.`RHAS_MODEL`, ROUND(`tree`.`LOGL`,4) AS LOGL ";
 					
-			//$f_d_query = " SELECT DISTINCT ".$select . " FROM ";
+			//$f_d_query_1 = " SELECT DISTINCT ".$select . " FROM ";
+							
+			//$f_d_query = " SELECT count(*) FROM ";
+			//$f_d_query = " SELECT count( DISTINCT `ali`.`ALI_ID`) FROM ";
 			
-			$f_d_query = " SELECT ".$select . " FROM ";
+
+			$f_d_query_1 = " SELECT ".$select . " FROM ";
+			$f_d_query = " SELECT count( `ali`.`ALI_ID`) FROM ";
 
 
 			/////////////////////String Building Taxa ///////////////////////
@@ -673,22 +722,35 @@ $first = false;
 					$f_d_query .= "INNER JOIN `dna_alignments` as `ali` using (`ALI_ID`) ";
 					$f_d_query .= "INNER JOIN `dna_alignments_taxonomy` as `ali_tax` using (`ALI_ID`) ";
 					$f_d_query .= "INNER JOIN `dna_trees` as `tree` USING (`ALI_ID`) ";
+
+					//Preview
+					$f_d_query_1 .= "`dna_sequences` as `seq` ";
+					$f_d_query_1 .= "INNER JOIN `dna_alignments` as `ali` using (`ALI_ID`) ";
+					$f_d_query_1 .= "INNER JOIN `dna_alignments_taxonomy` as `ali_tax` using (`ALI_ID`) ";
+					$f_d_query_1 .= "INNER JOIN `dna_trees` as `tree` USING (`ALI_ID`) ";
 					
 
 				}else{
-
+					
 					$f_d_query .= "`aa_sequences` as `seq` ";
 					$f_d_query .= "INNER JOIN `aa_alignments` as `ali` using (`ALI_ID`) ";
-					$f_d_query .= "INNER JOIN `aa_alignments_taxonomy` as `ali_tax` using (`ALI_ID`) ";					
-					$f_d_query .= "INNER JOIN `aa_trees` as `tree` USING (`ALI_ID`) ";
+					$f_d_query .= "INNER JOIN `aa_alignments_taxonomy` as `ali_tax` using (`ALI_ID`) ";
+					$f_d_query .= " INNER JOIN `aa_alignments` as `ali` USING (`ALI_ID`) INNER JOIN `aa_trees` as `tree` USING (`ALI_ID`) ";
+
+					//Preview
+					$f_d_query_1 .= "`aa_sequences` as `seq` ";
+					$f_d_query_1 .= "INNER JOIN `aa_alignments` as `ali` using (`ALI_ID`) ";
+					$f_d_query_1 .= "INNER JOIN `aa_alignments_taxonomy` as `ali_tax` using (`ALI_ID`) ";					
+					$f_d_query_1 .= "INNER JOIN `aa_trees` as `tree` USING (`ALI_ID`) ";
 				}
 					
 				if ($Taxa_type == "STR"){
 					$f_d_query .= "INNER JOIN `taxonomy` as `tax` ON (`TAX_ID`) ";
+					$f_d_query_1 .= "INNER JOIN `taxonomy` as `tax` ON (`TAX_ID`) ";
 				} /*
 				if ($Taxa_type == "STR"){
-					$f_d_query_count.= "INNER JOIN `taxonomy` as `tax` ON (`tax`.`LCA_TAX_ID`=`tax`.`TAX_ID`) ";
 					$f_d_query .= "INNER JOIN `taxonomy` as `tax` ON (`tax`.`LCA_TAX_ID`=`tax`.`TAX_ID`) ";
+					$f_d_query_1 .= "INNER JOIN `taxonomy` as `tax` ON (`tax`.`LCA_TAX_ID`=`tax`.`TAX_ID`) ";
 				} */
 
 					// dynamic query
@@ -772,18 +834,22 @@ $first = false;
 				if ($ALL == "checked"){
 						
 					$f_d_query .= "WHERE  `ali`.`FROM_DATABASE` in " . "(" . $stringall. ")";
+					$f_d_query_1 .= "WHERE  `ali`.`FROM_DATABASE` in " . "(" . $stringall. ")";
 	
 					}elseif(!empty($Source)){
 						
 						$f_d_query .= "WHERE `ali`.`FROM_DATABASE` in " . "(" . $stringsource. ")";
+						$f_d_query_1 .= "WHERE `ali`.`FROM_DATABASE` in " . "(" . $stringsource. ")";
 						
 					}
 				if (!empty($Taxa_list)){
 					if ($Taxa_type == "NUM"){
 
 					$f_d_query .=  " AND `seq`.`TAX_ID` in " . "(" . $stringtaxa. ")";
+					$f_d_query_1 .=  " AND `seq`.`TAX_ID` in " . "(" . $stringtaxa. ")";
 					} else if ($Taxa_type == "STR") {
 					$f_d_query .=  " AND `tax`.`TAX_NAME` in " . "(" . $stringtaxa. ")";
+					$f_d_query_1 .=  " AND `tax`.`TAX_NAME` in " . "(" . $stringtaxa. ")";
 					}
 				}
 
@@ -792,129 +858,34 @@ $first = false;
 					//Fuze conditions in 1 string
 				if($f_d_conditions){
 					$f_d_query .= " AND ".implode(" AND ", $f_d_conditions)." AND `tree`.`TREE_TYPE` = 'ml' AND `tree`.`ORIGINAL_ALI`='1' ";
+					$f_d_query_1 .= " AND ".implode(" AND ", $f_d_conditions)." AND `tree`.`TREE_TYPE` = 'ml' AND `tree`.`ORIGINAL_ALI`='1' ";
 				}
 					$f_d_query .= " GROUP BY `seq`.`ALI_ID`";
+					$f_d_query_1 .= " GROUP BY `seq`.`ALI_ID`";
+					//$f_d_query .= " ORDER BY `seq`.`ALI_ID`";
+					//$f_d_query_1 .= " ORDER BY `seq`.`ALI_ID`";
+
+
+					
+
+
 
 					$f_d_query .= " LIMIT {$Nr_hits} ";
-					$count_query = " SELECT count(*) FROM (".$f_d_query.") ";
+					$f_d_query_1 .= " LIMIT {$Nr_hits_preview} ";
+					$count_query = " SELECT count(*) FROM (".$f_d_query_1.") ";
+					
+				//Echo string for the query
+				//echo $f_d_query."<br>\n";
+				echo $count_query."<br>\n";
+				echo $f_d_query_1;
+					
 					
 					
 			}catch(PDOException $e) {				
 				echo "Connection Stable Query wrong " . $e->getMessage(). $f_d_query;
 				}
 			}	
-			
-			
-			
-			
 		
-			
-			
-			
-		$filter_query = $connect->prepare($f_d_query);
-		$filter_query->execute($f_d_parameters);
-
-			
-		$filter_query_result = $filter_query->fetchAll(PDO::FETCH_ASSOC);
-		
-			
-	//if(!empty($ID_search) && count($Ali_ID)  ==  1)
-	if(!empty($ID_search) && count($Ali_ID)  ==  1){ 
-		echo $Ali_ID;
-		echo "<br>";
-		header('Content-Type: text/csv; charset=utf-8');
-		//header('Content-Disposition: attachment; filename=alignment.fasta');
-		// file name contains the Ali ID
-		header('Content-Disposition: attachment; filename="'.implode($Ali_ID).'.fasta"');
-		//created file
-		$output_file = fopen("php://output", "w"); 
-			
-		$headers_printed = true; 
-		$output = " ";
-		
-		// loop through the fetched data
-		foreach ($filter_query_result as $list) {
-				 
 				
-			//check for headders 	
-			if(!$headers_printed){
-				
-			//Fill in Headers here 
-			fputcsv($output_file,array(''));
-			$headers_printed = true;
-			}
-				
-		// Write Results in Document 
-		fwrite($output_file,">");
-		fputcsv($output_file,$list,"\n");
 		
-		fpassthru($output_file);
-		}
-	} else {
-
-/*
-
-			header('Content-Type: text/c; charset=utf-8');
-		header('Content-Disposition: attachment; filename=alignment.fasta');
-		$output_file = fopen("php://output", "w"); 
-		
-		$headers_printed = true; 
-		$output = " ";
-		//$fasta = ">";
-		
-		foreach ($filter_query_result as $list) {
-			 
-			
-			///download me 	
-			if(!$headers_printed){
-			
-			//Fill in Headers here 
-			fputcsv($output_file,array(''));
-			$headers_printed = true;
-			}
-			
-			//fwrite($output_file,"\n");
-			fwrite($output_file,">");
-		
-		
-			// Write Results in Document 
-			fputcsv($output_file,$list,"\n");
-			//fwrite($output_file,"\n");
-			fpassthru($output_file);
-		*/
-
-	//if(!empty($ID_search) AND $ID_search == TRUE){ 
-		header('Content-Type: text/csv; charset=utf-8');
-		header('Content-Disposition: attachment; filename=alignment.csv');
-		$output_file = fopen("php://output", "w"); 
-		
-		$headers_printed = false; 
-		$output = " ";
-		//$fasta = ">";
-		
-		foreach ($filter_query_result as $list) {
-
-
-			
-			///download me 	
-			if(!$headers_printed){
-			
-			//Fill in Headers here 
-			fputcsv($output_file,array("Alignment_ID", "LCA_NAME", "LCA_RANK", "TAXA", "SITES", "DISTINCT_PATTERNS", "PARSIMONY_INFORMATIVE_SITES", "FRAC_WILDCARDS_GAPS", "MODEL", "BASE_MODEL", "RHAS", "LogL"),"\t");
-			$headers_printed = true;
-			}
-
-
-			
-			// Write Results in Document 
-			fputcsv($output_file,$list,"\t");
-			fpassthru($output_file);
-
-		}
-	}
-
-		
-		$connect = null;
-
-
-?>
+		?>

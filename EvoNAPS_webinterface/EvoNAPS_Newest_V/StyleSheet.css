@@ -59,12 +59,17 @@ color: #DFE6E9;
    font-style: italic;
    font-size: 18px;
    font-family: "JetBrains Mono",monospace;
-   font-family: sans-serif; 
 }
 .data_type_taxonomy{
    text-align: center;
    font-family: "JetBrains Mono",monospace;
    font-size: 22px;
+}
+.data_type_mult_ali{
+   text-align: left;
+   font-family: "JetBrains Mono",monospace;
+   font-size: 22px;
+   margin-left: 15px;
 }
 .text_form{
    font-family: "JetBrains Mono",monospace;
@@ -73,19 +78,30 @@ color: #DFE6E9;
    
 }
 .rank_form{
-   text-align: center;
+   text-align: left;
    font-family: "JetBrains Mono",monospace;
-   font-size: 22px;
+   font-size: 20px;
    height: 30px;
    width: 240px;
    border-radius: 12px;
 }
+.num_form{
+   text-align: left;
+   font-family: "JetBrains Mono",monospace;
+   font-size: 20px;
+   height: 30px;
+   width: 130px;
+   border-radius: 12px;
+}
 .text_field{
-   width: 170px;
+   width: 150px;
    border-radius: 12px;
    height: 30px;
    width: 240px;
-   padding: 2px 55px;
+   padding-left: 5px;
+   font-family: "JetBrains Mono",monospace;
+   font-size: 20px;
+   /*padding: 2px 55px;*/
 }
 .formfield {
    display: flex;
@@ -96,7 +112,7 @@ color: #DFE6E9;
    border-radius: 12px;
    height: 200px;
    /*width: 240px;*/
-   padding: 15px 15px;
+   padding: 10px 10px;
 }
 .source_field{
    font-family: "JetBrains Mono",monospace;
@@ -107,8 +123,8 @@ color: #DFE6E9;
    width: 280px;
    border-radius: 12px;
 }
-.text_form_pushed2{
-   margin-left: 140px;
+.text_form_ancestor_rank{
+   margin-left: 70px;
 }
 .text_form_pushed{
    margin-left: 70px;
@@ -143,4 +159,9 @@ th{
    visibility: visible;
  } */
 select:invalid {color: gray; }
-select option { color: black; } 
+select option {color: black; } 
+option[default] {color: gray; }
+::placeholder {color: silver; }
+option:first-child {
+   color: gray;
+ }

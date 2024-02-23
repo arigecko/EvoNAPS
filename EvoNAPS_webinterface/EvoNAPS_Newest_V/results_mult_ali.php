@@ -69,7 +69,7 @@
 
 
 
-Include 'query_builder_taxonomy.php';
+Include 'query_builder_mult_ali.php';
 
 echo '<div class ="center">';
 
@@ -98,30 +98,8 @@ $time_start = microtime(true);
 		$filter_query_1->execute($f_d_parameters);
 		
 		$filter_query_result = $filter_query_1->fetchAll(PDO::FETCH_ASSOC);
-		
-
-//$time_end = microtime(true);
-//$execution_time = ($time_end - $time_start);	
-//echo '<b>Total Execution Time:</b> '.$execution_time.' Sec';
-//echo "<br>";
-// trying to fix results
-
-//STill need to fix the query 
-	if(!empty($Taxa_search) && $stringtaxa != ""){
-		$count = 0;
-		$count_step = $filter_query -> fetchColumn();	
-		while ($count_step){
-			//$count += $count_step;
-			$count++;
-			$count_step = $filter_query -> fetchColumn();	
-		}
-	}else {
 		$count = $filter_query -> fetchColumn();
-	}
-		//
-			
-		
-
+	
 		
 $time_end = microtime(true);
 $execution_time = ($time_end - $time_start);
@@ -160,9 +138,9 @@ echo "<br>";
 
 	 
 	
-	echo '<h3> Download dataset:  <a href ="download_button_taxonomy.php" title = "Note!" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="Here you can download your collected Data "> Download</a></h3> ';
+	echo '<h3> Download dataset:  <a href ="download_button_mult_ali.php" title = "Note!" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="Here you can download your collected Data "> Download</a></h3> ';
 	echo "<br>";
-	echo '<h3>Refine your search: <a href ="form_taxonomy_refine.php" title = "Note!" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content=" Here you can go back to the orignal form with the search already filled in ">Refine </a> </h3> ';
+	echo '<h3>Refine your search: <a href ="form_mult_ali_refine.php" title = "Note!" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content=" Here you can go back to the orignal form with the search already filled in ">Refine </a> </h3> ';
 	echo "<br>";
 	echo '<h3><a href="alignment.php">Reset</a></h3>';
 
@@ -171,7 +149,7 @@ echo "<br>";
 		//echo "<h3> Preview of selected dataset (max ".$Nr_hits_preview." results): </h3>";
 		echo "<h3> Preview of selected dataset (max 50 results): </h3>";
 
-		if (!empty($ID_search) AND count($Ali_ID) == 1){
+		if (count($Ali_ID) == 1){
 			if (!empty($Source_study) AND $Source_study == TRUE) {
 				$list = $study_query_result[0];
 			//foreach ($study_query_result as $list) {		
